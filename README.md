@@ -500,3 +500,183 @@ incluímos o estilo no title
     color: theme.colors.text_primary,
   },
 ```
+
+## Criando um novo componente Form
+
+Criando components/Form/styles.ts e index.tsx
+importamos TextInput, Image,Text, TouchableOpacity
+
+usamos ArrowLeft
+
+e o Titulo sera vindo de forma aleatória
+
+```tsx
+import { ArrowLeft } from "phosphor-react-native";
+import React from "react";
+import { Text, View } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { theme } from "../../theme";
+
+import { styles } from "./styles";
+
+export function Form() {
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity>
+          <ArrowLeft
+            size={24}
+            weight={"bold"}
+            color={theme.colors.text_secondary}
+          />
+        </TouchableOpacity>
+        <View style={styles.titleContainer}>
+          <Text style={styles.titleText}></Text>
+        </View>
+      </View>
+    </View>
+  );
+}
+```
+
+Como o titulo e aleatório vamos criar o type dele no Widget/index.tsx para tipar
+Widget/index.tsx
+
+```tsx
+export type FeedbackType = keyof typeof FeedbackTypes;
+```
+
+Agora vamos no Form/index.tsx
+Criamos uma interface para definir as propriedades
+
+```tsx
+interface Props {
+  feedbackType: FeedbackType;
+}
+
+//usamos ele na props do Form
+export function Form({ feedbackType }: Props) {
+  //criamos uma variável info  e buscamos pela lista no feedbackTypes
+  const feedbackTypeInfo = feedbackTypes[feedbackType];
+  //Agora conseguimos recuperar o title e a imagem vindo pelo props
+  <View style={styles.titleContainer}>
+    <Image source={feedbackTypeInfo.image} style={styles.image} />
+    <Text style={styles.titleText}>{feedbackTypeInfo.title}</Text>
+  </View>;
+}
+```
+
+> Ficando assim o Form completo
+
+```tsx
+import { ArrowLeft } from "phosphor-react-native";
+import React from "react";
+import { Image, Text, View } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { theme } from "../../theme";
+import { feedbackTypes } from "../../utils/feedbackTypes";
+import { FeedbackType } from "../Widget";
+
+import { styles } from "./styles";
+
+interface Props {
+  feedbackType: FeedbackType;
+}
+export function Form({ feedbackType }: Props) {
+  const feedbackTypeInfo = feedbackTypes[feedbackType];
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity>
+          <ArrowLeft
+            size={24}
+            weight={"bold"}
+            color={theme.colors.text_secondary}
+          />
+        </TouchableOpacity>
+        <View style={styles.titleContainer}>
+          <Image source={feedbackTypeInfo.image} style={styles.image} />
+          <Text style={styles.titleText}>{feedbackTypeInfo.title}</Text>
+        </View>
+      </View>
+    </View>
+  );
+}
+```
+
+> Vamos estilizar o nosso Form
+
+Form/styles.ts
+
+```tsx
+import { StyleSheet } from "react-native";
+import { theme } from "../../theme";
+
+export const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 24,
+    alignItems: "center",
+  },
+  header: {
+    flexDirection: "row",
+    marginVertical: 16,
+  },
+  titleContainer: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingRight: 24,
+  },
+  titleText: {
+    fontSize: 20,
+    color: theme.colors.text_primary,
+    fontFamily: theme.fonts.medium,
+  },
+  image: {
+    width: 24,
+    height: 24,
+    marginRight: 8,
+  },
+});
+```
+
+Agora vamos no Widget/index.tsx
+
+```tsx
+//colocamos o Form temporariamente
+<Form feedbackType="BUG" />
+```
+
+Vamos voltar ao Form/index.tsx
+Adicionamos a parte do input
+
+```tsx
+<TextInput
+  multiline
+  style={styles.input}
+  placeholder={
+    "Algo nao esta funcionando bem? Queremos corrigir. Conte com detalhes o que esta acontecendo"
+  }
+  placeholderTextColor={theme.colors.surface_secondary}
+/>
+```
+
+volitamos no Form/styles.ts
+
+```tsx
+
+  input: {
+    height: 112,
+    padding: 12,
+    marginBottom: 8,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: theme.colors.stroke,
+    color: theme.colors.text_primary,
+    fontFamily: theme.fonts.regular,
+  },
+
+```
+
+## Criando um novo componente chamado screenshot
