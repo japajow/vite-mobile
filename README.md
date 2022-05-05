@@ -797,6 +797,103 @@ Incluindo a estilização do footer no Form/styles.ts
 
 ```
 
-> Criando agora o botão de enviar o feedback
+## Criando um novo componente botão de enviar o feedback
+
+Criamos um components/Button/index.tsx e styles.ts
+
+importamos o Text, TouchableOpacity, TouchableOpacityProps,ActivityIndicator
+
+Button/index.tsx
+
+```tsx
+//Criamos a interface
+interface Props extends TouchableOpacityProps {
+  isLoading: boolean;
+}
+
+//passamos a props no Button
+export function Button({ isLoading, ...rest }: Props) {}
+
+// fazemos ima condicional
+<TouchableOpacity style={styles.container} {...rest}>
+  {isLoading ? (
+    <ActivityIndicator color={theme.colors.text_on_brand_color} />
+  ) : (
+    <Text style={styles.title}>Enviar Feedback</Text>
+  )}
+</TouchableOpacity>;
+```
+
+Agora no Button/styles.ts
+
+```tsx
+import { StyleSheet } from "react-native";
+import { theme } from "../../theme";
+
+export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    height: 40,
+    backgroundColor: theme.colors.brand,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 4,
+  },
+  title: {
+    fontSize: 14,
+    fontFamily: theme.fonts.medium,
+    color: theme.colors.text_on_brand_color,
+  },
+});
+```
+
+Agora vamos no Form/index.tsx
+importamos o nosso Button
+
+```tsx
+<View style={styles.footer}>
+  <ScreenshotButton
+    onRemoveShot={() => {}}
+    onTakeShot={() => {}}
+    screenshot={"https://github.com/japajow.png"}
+  />
+
+  <Button isLoading={true} />
+</View>
+```
+
+Modificando um pouco o nosso ScreenshotButton
+
+```tsx
+De
 
 
+<Trash
+  size={22}
+  color={theme.colors.text_secondary}
+  weight={"fill"}
+  style={styles.removeIcon}
+/>
+
+PARA
+
+<View>
+  <Image source={{ uri: screenshot }} style={styles.image} />
+  <Trash
+    size={22}
+    color={theme.colors.text_secondary}
+    weight={"fill"}
+    style={styles.removeIcon}
+  />
+</View>
+
+```
+
+Adicionando o estilo image no ScreenshotButton/styles.ts
+
+```tsx
+  image: {
+    width: 40,
+    height: 40,
+  },
+```
