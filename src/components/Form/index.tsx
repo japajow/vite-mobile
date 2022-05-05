@@ -13,11 +13,19 @@ import { captureScreen } from "react-native-view-shot";
 
 interface Props {
   feedbackType: FeedbackType;
+  onFeedbackCanceled: () => void;
+  onFeedbackSent: () => void;
 }
-export function Form({ feedbackType }: Props) {
+export function Form({
+  feedbackType,
+  onFeedbackCanceled,
+  onFeedbackSent,
+}: Props) {
   const feedbackTypeInfo = feedbackTypes[feedbackType];
 
   const [screenshot, setScreenShot] = useState<string | null>(null);
+
+  const [isSendFeedback, setIsSendFeedback] = useState(false);
 
   function handleScreenShot() {
     captureScreen({
@@ -32,10 +40,25 @@ export function Form({ feedbackType }: Props) {
     setScreenShot(null);
   }
 
+  async function handleSendFeedback() {
+    if (isSendFeedback) {
+      return;
+    }
+
+    setIsSendFeedback(true);
+
+    try {
+      
+    } catch (error) {
+      console.log(error);
+      setIsSendFeedback(false);
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={onFeedbackCanceled}>
           <ArrowLeft
             size={24}
             weight={"bold"}
@@ -55,6 +78,7 @@ export function Form({ feedbackType }: Props) {
           "Algo nao esta funcionando bem? Queremos corrigir. Conte com detalhes o que esta acontecendo"
         }
         placeholderTextColor={theme.colors.surface_secondary}
+        autoCorrect={false}
       />
       <View style={styles.footer}>
         <ScreenshotButton
@@ -63,7 +87,7 @@ export function Form({ feedbackType }: Props) {
           screenshot={screenshot}
         />
 
-        <Button isLoading={false} />
+        <Button isLoading={isSendFeedback} onPress={handleSendFeedback} />
       </View>
     </View>
   );

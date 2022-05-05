@@ -1038,4 +1038,178 @@ function handleScreenshotRemove() {
   <Button isLoading={false} />
 </View>;
 ```
+
+## Fazendo as rotas funcionarem
+
+No Widget/index.tsx
+
+Pegando as informação que foi selecionado pelas Options
+
+```tsx
+const [feedbackType, setFeedbackType] = useState<FeedbackType | null>(null);
+const [feedbackSent, setFeedbackSent] = useState(false);
+
+//fazemos um condicional para pegar mudar a tela conforme houver o feedbackSent ou feedbackType
+{
+  feedbackSent ? (
+    <Success />
+  ) : (
+    <>{feedbackType ? <Form feedbackType={feedbackType} /> : <Options />}</>
+  );
+}
+
+// no Options passamos um propriedade que vai pegar os feedbacks selecionados
+{
+  feedbackSent ? (
+    <Success />
+  ) : (
+    <>
+      {feedbackType ? (
+        <Form feedbackType={feedbackType} />
+      ) : (
+        <Options onFeedbackTypeChanged={setFeedbackType} />
+      )}
+    </>
+  );
+}
+```
+
+No Options/index.tsx
+
+Criamos uma interface passando o onFeedbackTypeChanged tipando ele com o FeedbackType
+
+```tsx
+interface Props {
+  onFeedbackTypeChanged: (feedbackType: FeedbackType) => void;
+}
+
+//Passamos o onFeedbackTypeChanged na props da Options
+export function Options({ onFeedbackTypeChanged }: Props) {}
+
+//Passando no onPress qual foi a chave selecionada
+{
+  Object.entries(feedbackTypes).map(([key, value]) => (
+    <Option
+      key={key}
+      title={value.title}
+      image={value.image}
+      onPress={() => onFeedbackTypeChanged(key as FeedbackType)}
+    />
+  ));
+}
+```
+
+> Agora vamos fazer o botão de voltar funcionar
+
+Form/index.tsx
+Adicionamos na interface mais 2 funcao
+
+```tsx
+interface Props {
+  feedbackType: FeedbackType;
+  onFeedbackCanceled: () => void;
+  onFeedbackSent: () => void;
+}
+
+// colocamos no props da Form
+export function Form({
+  feedbackType,
+  onFeedbackCanceled,
+  onFeedbackSent,
+}: Props) {}
+
+//pegamos o onFeedbackCanceled e colocamos
+<TouchableOpacity onPress={onFeedbackCanceled}>
+  // <ArrowLeft size={24} weight={"bold"} color={theme.colors.text_secondary} />
+</TouchableOpacity>;
+```
+
+Voltamos ao Widget/index.tsx
+
+```tsx
+{
+  feedbackSent ? (
+    <Success />
+  ) : (
+    <>
+      {feedbackType ? (
+        <Form
+          feedbackType={feedbackType}
+          onFeedbackCanceled={criamos uma funcao para resetar}
+          onFeedbackSent={() => {}}
+        />
+      ) : (
+        <Options onFeedbackTypeChanged={setFeedbackType} />
+      )}
+    </>
+  );
+}
+
+function handleRestartFeedback(){
+  setFeedbackType(null)
+  setFeedbackSent(false)
+}
+
+//Usamos a funcao handleRestartFeedback no onFeedbackCanceled
+
+  //  {feedbackSent ? (
+  //         <Success />
+  //       ) : (
+  //         <>
+  //           {feedbackType ? (
+  //             <Form
+                feedbackType={feedbackType}
+                onFeedbackCanceled={handleRestartFeedback}
+                onFeedbackSent={() => {}}
+    //           />
+    //         ) : (
+    //           <Options onFeedbackTypeChanged={setFeedbackType} />
+    //         )}
+    //       </>
+    //     )}
+    //   </BottomSheet>
+    // </>
+
+    //E para o  onFeedbackSent criamos outra funcao
+
+    function handleFeedbackSent(){
+      setFeedbackSent(true)
+    }
+
+     feedbackType={feedbackType}
+     onFeedbackCanceled={handleRestartFeedback}
+     onFeedbackSent={handleFeedbackSent}
+```
+
+No Form/index.tsx criamos uma funcao para o Button para fazer um submit
+
+```tsx
+// criamos uim estado
+const [isSendFeedback, setIsSendFeedback] = useState(false);
+
+async function handleSendFeedback() {
+  if (isSendFeedback) {
+    return;
+  }
+
+  await setIsSendFeedback(true);
+}
+
+// E no nosso Button colocamos handleSendFeedback
+<Button isLoading={isSendFeedback} onPress={handleSendFeedback} />;
+
+//Criamos agora um try catch para fazer o tratamento de requisição
+
+async function handleSendFeedback() {
+  if (isSendFeedback) {
+    return;
+  }
+
+  setIsSendFeedback(true);
+
+  try {
+  } catch (error) {}
+}
+```
+
 ## integrando o nosso projeto com backend usando Axios
