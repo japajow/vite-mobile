@@ -10,6 +10,7 @@ import { FeedbackType } from "../Widget";
 import { styles } from "./styles";
 
 import { captureScreen } from "react-native-view-shot";
+import { api } from "../../libs/api";
 
 interface Props {
   feedbackType: FeedbackType;
@@ -26,6 +27,8 @@ export function Form({
   const [screenshot, setScreenShot] = useState<string | null>(null);
 
   const [isSendFeedback, setIsSendFeedback] = useState(false);
+
+  const [comment, setComment] = useState("");
 
   function handleScreenShot() {
     captureScreen({
@@ -48,7 +51,13 @@ export function Form({
     setIsSendFeedback(true);
 
     try {
-      
+      await api.post("/feedbacks", {
+        type: feedbackType,
+        screenshot,
+        comment,
+      });
+
+      onFeedbackSent();
     } catch (error) {
       console.log(error);
       setIsSendFeedback(false);
@@ -79,6 +88,7 @@ export function Form({
         }
         placeholderTextColor={theme.colors.surface_secondary}
         autoCorrect={false}
+        onChangeText={setComment}
       />
       <View style={styles.footer}>
         <ScreenshotButton

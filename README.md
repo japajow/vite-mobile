@@ -1213,3 +1213,98 @@ async function handleSendFeedback() {
 ```
 
 ## integrando o nosso projeto com backend usando Axios
+
+Instalando o axios
+
+npm install axios
+
+Criamos uma pasta nova no projeto scr/libs/api.ts
+
+```tsx
+import axios from "axios";
+
+export const api = axios.create({
+  baseURL: "http://192.168.1.13:3333",
+});
+```
+
+Dentro da Form/index.tsx importamos a api
+
+```tsx
+try {
+  await api.post("/feedbacks", {
+    type: feedbackType,
+    screenshot,
+    comment, //criamos o estado do comment
+  });
+} catch (error) {
+  console.log(error);
+  setIsSendFeedback(false);
+}
+
+//criando o estado do comment
+
+const [comment, setComment] = useState("");
+
+//passamos o onChangeText setando o setComment
+<TextInput
+  multiline
+  style={styles.input}
+  placeholder={
+    "Algo nao esta funcionando bem? Queremos corrigir. Conte com detalhes o que esta acontecendo"
+  }
+  placeholderTextColor={theme.colors.surface_secondary}
+  autoCorrect={false}
+  onChangeText={setComment}
+/>;
+
+// passamos onFeedbackSent para ir para pagina de Success
+
+try {
+  await api.post("/feedbacks", {
+    type: feedbackType,
+    screenshot,
+    comment,
+  });
+
+  onFeedbackSent();>>>
+} catch (error) {
+  console.log(error);
+  setIsSendFeedback(false);
+}
+```
+
+No Success/index.ts
+
+```tsx
+//criamos uma interface
+
+interface Props {
+  onSendAnotherFeedback: () => void;
+}
+
+// e passamos a props no Success
+
+export function Success({ onSendAnotherFeedback }: Props) {}
+
+// e passamos o button quando clicar
+// <View style={styles.container}>
+//   <Image source={successImg} style={styles.image} />
+//   <Text style={styles.title}>Agradecemos o feedback!</Text>
+<TouchableOpacity style={styles.button} onPress={onSendAnotherFeedback}>
+  // <Text style={styles.buttonTitle}>Quero enviar outro</Text>
+</TouchableOpacity>;
+//   <Copyright />
+// </View>;
+```
+
+No Widget/index.tsx
+Passamos a propriedade onSendAnotherFeedback passando a funcao handleRestartFeedback
+
+```tsx
+<Success onSendAnotherFeedback={handleRestartFeedback} />
+```
+
+## passando a imagem a ser base64
+
+Agora vamos passar a nossa imagem temporária para uma base64
