@@ -69,7 +69,7 @@ export default function App() {
 }
 ```
 
-##  Configurando fonte personalizada
+## Configurando fonte personalizada
 
 pesquisar no google por expo google fontes
 
@@ -80,6 +80,107 @@ expo install expo-app-loading
 
 **loading tem a funcao de verificar se a fonte foi carregada , caso nao ele fica com o icone splash carregando**
 
+> importamos
 
+import AppLoading from 'expo-app-loading';
+import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
 
+App.tsx
+
+```tsx
+import AppLoading from "expo-app-loading";
+import {
+  useFonts,
+  Inter_400Regular,
+  Inter_500Medium,
+} from "@expo-google-fonts/inter";
+```
+
+Colocamos a variável fontes useFonts dentro App(){}
+
+```tsx
+let [fontsLoaded] = useFonts({
+  Inter_400Regular,
+  Inter_500Medium,
+});
+```
+
+Colocamos o if com loading
+
+```tsx
+if (!fontsLoaded) {
+  return <AppLoading />;
+}
+```
+
+## Criando criação do botão flutuando
+
+> importando o TouchableOpacity
+> Elemento flutuante de clique
+
+instalando a biblioteca de icones phosphor
+
+npm install --save phosphor-react-native
+
+> Instalando a biblioteca react native svg que lida com SVG
+
+expo install react-native-svg
+
+importando o icone ChatTeardropDots
+
+Widget/index.tsx
+
+```tsx
+//icone
+import { ChatTeardropDots } from "phosphor-react-native";
+
+<ChatTeardropDots
+  size={24}
+  color={theme.colors.text_on_brand_color}
+  weight={"bold"}
+/>;
+```
+
+Colocamos um estilo no TouchableOPacity
+
+no styles.ts
+
+```tsx
+import { StyleSheet } from "react-native";
+import { theme } from "../../theme";
+
+export const styles = StyleSheet.create({
+  button: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: theme.colors.brand,
+
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    right: 16,
+    bottom: 16, // aqui no bottom o iPhone fica um pouco apagado para isso instalamos uma biblioteca
+  },
+});
+```
+
+> instalando a biblioteca para footer no iPhone
+> npm install react-native-iphone-x-helper
+
+Agora importamos o getBottomSpace from react-native-iphone-x-helper
+
+```tsx
+import { getBottomSpace } from "react-native-iphone-x-helper";
+```
+
+Agora usamos ele
+
+```tsx
+
+  bottom: getBottomSpace() + 16,
+
+```
+
+## Criando o Menu 
 
