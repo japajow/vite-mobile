@@ -976,4 +976,66 @@ export const styles = StyleSheet.create({
 Agora vamos testar e ver como ficou la no Widget/index.tsx
 
 ```tsx
+//temporariamente colocamos o componente Success
+<Success />
 ```
+
+## Capturando a tela e fazendo aparecer
+
+Vamos no nosso Widget/index.tsx e mudar o Success para Form
+
+Vamos no Form/index.tsx e fazer o botão do screenshot funcionar
+
+instalando a biblioteca react-native-view-shot
+npm install react-native-view-shot
+
+importamos uma funcao chamada captureScreen
+
+```tsx
+import { captureScreen } from "react-native-view-shot";
+```
+
+e importamos tambem o useState para guardar o valor da screenshot feita
+
+```tsx
+//string ou null
+const [screenshot, setScreenShot] = useState<string | null>(null);
+
+//criamos uma funcao
+function handleScreenShot() {
+  captureScreen({
+    format: "jpg",
+    quality: 0.8,
+  })
+    .then((uri) => setScreenShot(uri))
+    .catch((error) => console.log(error.message));
+}
+// passamos a funcao handleScreenshot no onTakeShot
+<View style={styles.footer}>
+  <ScreenshotButton
+    onRemoveShot={handleScreenShot}
+    onTakeShot={() => {}}
+    screenshot={"https://github.com/japajow.png"}
+  />
+
+  <Button isLoading={true} />
+</View>;
+
+//Criamos a funcao pra remover o screenshot
+
+function handleScreenshotRemove() {
+  setScreenShot(null);
+}
+
+//passamos a funcao handleScreenshotRemove
+<View style={styles.footer}>
+  <ScreenshotButton
+    onTakeShot={handleScreenShot}
+    onRemoveShot={handleScreenshotRemove}
+    screenshot={screenshot}
+  />
+
+  <Button isLoading={false} />
+</View>;
+```
+## integrando o nosso projeto com backend usando Axios
