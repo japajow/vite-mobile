@@ -897,3 +897,83 @@ Adicionando o estilo image no ScreenshotButton/styles.ts
     height: 40,
   },
 ```
+
+## Criando o ultimo componente Success
+
+Criamos components/Success/index.tsx e styles.ts
+importamos o Image,Text,TouchableOpacity
+
+import successImg from "../../assets/success.png";
+**Porem vai dar erro**
+criamos uma pasta @types/png.d.ts
+
+```tsx
+declare module "*.png";
+```
+
+No Success/index.tsx
+
+```tsx
+import React from "react";
+import { View, Image, Text, TouchableOpacity } from "react-native";
+
+import successImg from "../../assets/success.png";
+import { Copyright } from "../Copyright";
+
+import { styles } from "./styles";
+
+export function Success() {
+  return (
+    <View style={styles.container}>
+      <Image source={successImg} style={styles.image} />
+      <Text style={styles.title}>Agradecemos o feedback!</Text>
+      <TouchableOpacity style={styles.button}>
+        <Text style={styles.buttonTitle}>Quero enviar outro</Text>
+      </TouchableOpacity>
+      <Copyright />
+    </View>
+  );
+}
+```
+
+No Success/styles.ts
+
+```tsx
+import { StyleSheet } from "react-native";
+import { theme } from "../../theme";
+
+export const styles = StyleSheet.create({
+  container: { alignItems: "center" },
+  image: {
+    width: 36,
+    height: 36,
+    marginTop: 42,
+    marginBottom: 10,
+  },
+  title: {
+    fontSize: 20,
+    marginBottom: 24,
+    fontFamily: theme.fonts.medium,
+    color: theme.colors.text_primary,
+  },
+  button: {
+    height: 40,
+    backgroundColor: theme.colors.surface_secondary,
+    borderRadius: 4,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 24,
+    marginBottom: 56,
+  },
+  buttonTitle: {
+    fontSize: 14,
+    fontFamily: theme.fonts.medium,
+    color: theme.colors.text_primary,
+  },
+});
+```
+
+Agora vamos testar e ver como ficou la no Widget/index.tsx
+
+```tsx
+```
