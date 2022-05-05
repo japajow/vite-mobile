@@ -9,6 +9,8 @@ import { ScreenshotButton } from "../ScreenshotButton";
 import { FeedbackType } from "../Widget";
 import { styles } from "./styles";
 
+import * as FileSystem from "expo-file-system";
+
 import { captureScreen } from "react-native-view-shot";
 import { api } from "../../libs/api";
 
@@ -50,10 +52,14 @@ export function Form({
 
     setIsSendFeedback(true);
 
+    const screenshotBase64 =
+      screenshot &&
+     await  FileSystem.readAsStringAsync(screenshot, { encoding: "base64" });
+
     try {
       await api.post("/feedbacks", {
         type: feedbackType,
-        screenshot,
+        screenshot: `data:image/png;base64, ${screenshotBase64}`,
         comment,
       });
 

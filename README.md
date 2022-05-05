@@ -1308,3 +1308,38 @@ Passamos a propriedade onSendAnotherFeedback passando a funcao handleRestartFeed
 ## passando a imagem a ser base64
 
 Agora vamos passar a nossa imagem temporária para uma base64
+
+instalando
+
+expo install expo-file-system
+
+importamos o FileSystem
+
+Form/index.tsx
+
+```tsx
+import * as FileSystem from "expo-file-system";
+//criamos uma variável screenshotBase64 que transforma a imagem temporária em base64
+
+const screenshotBase64 =
+  screenshot &&
+  (await FileSystem.readAsStringAsync(screenshot, { encoding: "base64" }));
+
+// agora passamos no try screenshot a nossa variável de transformar a imagem
+
+try {
+  await api.post("/feedbacks", {
+    type: feedbackType,
+    screenshot: `data:image/png;base64, ${screenshotBase64}`,
+    comment,
+  });
+
+  onFeedbackSent();
+} catch (error) {
+  console.log(error);
+  setIsSendFeedback(false);
+}
+```
+
+Código de Hoje
+#StepByStep
