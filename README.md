@@ -680,3 +680,123 @@ volitamos no Form/styles.ts
 ```
 
 ## Criando um novo componente chamado screenshot
+
+Criamos a pasta components/Screenshot/index.tsx e styles.ts
+Importamos o TouchableOpacity e Image
+
+Criamos uma interface passando screenshot e uma funcao
+
+```tsx
+interface Props {
+  screenshot: string | null;
+  onTakeShot: () => void;
+  onRemoveShot: () => void;
+}
+
+//passamos a props no ScreenshotButton
+export function ScreenshotButton({
+  screenshot,
+  onTakeShot,
+  onRemoveShot,
+}: Props) {}
+
+// E no TouchableOpacity passamos onPress uma condição
+
+<TouchableOpacity
+  style={styles.container}
+  onPress={screenshot ? onRemoveShot : onTakeShot}
+></TouchableOpacity>;
+```
+
+Deixamos o ScreenshotButton/index.tsx assim
+
+```tsx
+import { Camera, Trash } from "phosphor-react-native";
+import React from "react";
+import { View, TouchableOpacity, Image } from "react-native";
+import { theme } from "../../theme";
+
+import { styles } from "./styles";
+
+interface Props {
+  screenshot: string | null;
+  onTakeShot: () => void;
+  onRemoveShot: () => void;
+}
+
+export function ScreenshotButton({
+  screenshot,
+  onTakeShot,
+  onRemoveShot,
+}: Props) {
+  return (
+    <TouchableOpacity
+      style={styles.container}
+      onPress={screenshot ? onRemoveShot : onTakeShot}
+    >
+      {screenshot ? (
+        <Trash
+          size={22}
+          color={theme.colors.text_secondary}
+          weight={"fill"}
+          style={styles.removeIcon}
+        />
+      ) : (
+        <Camera size={24} color={theme.colors.text_secondary} weight={"bold"} />
+      )}
+    </TouchableOpacity>
+  );
+}
+```
+
+Vamos estilizado o screenshotButton/styles.ts
+
+```tsx
+import { StyleSheet } from "react-native";
+import { theme } from "../../theme";
+
+export const styles = StyleSheet.create({
+  container: {
+    width: 40,
+    height: 40,
+    borderRadius: 4,
+    backgroundColor: theme.colors.surface_secondary,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 8,
+    position: "relative",
+  },
+  removeIcon: {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+  },
+});
+```
+
+Vamos importar o ScreenshotButton no nosso Form/index.tsx
+
+```tsx
+<View style={styles.footer}>
+  <ScreenshotButton
+    onRemoveShot={() => {}}
+    onTakeShot={() => {}}
+    screenshot={""}
+  />
+</View>
+```
+
+Incluindo a estilização do footer no Form/styles.ts
+
+```tsx
+
+ footer: {
+    flexDirection: "row",
+    marginBottom: 16,
+  },
+
+```
+
+> Criando agora o botão de enviar o feedback
+
+
