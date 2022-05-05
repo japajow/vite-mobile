@@ -10,6 +10,7 @@ import BottomSheet from "@gorhom/bottom-sheet";
 
 //Gesture handle
 import { gestureHandlerRootHOC } from "react-native-gesture-handler";
+import { Options } from "../Options";
 
 export function Widget() {
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -27,9 +28,16 @@ export function Widget() {
         />
       </TouchableOpacity>
 
-      <BottomSheet ref={bottomSheetRef} snapPoints={[1, 280]} backgroundStyle={styles.modal} handleIndicatorStyle={styles.indicator}></BottomSheet>
+      <BottomSheet
+        ref={bottomSheetRef}
+        snapPoints={[1, 280]}
+        backgroundStyle={styles.modal}
+        handleIndicatorStyle={styles.indicator}
+      >
+        <Options />
+      </BottomSheet>
     </>
   );
 }
 
-export default gestureHandlerRootHOC(Widget)
+export default gestureHandlerRootHOC(Widget);

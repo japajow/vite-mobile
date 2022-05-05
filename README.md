@@ -300,3 +300,203 @@ indicator:{
   },
 
 ```
+
+## Criando a parte do Copyright
+
+Criando uma pasta components/Copyright/index.tsx e styles.ts
+
+rnso e rnbc
+
+Criando o components/Options/index.tsx e styles.ts
+
+Options/index.tsx
+importamos o Copyright
+
+```tsx
+import { Copyright } from "../Copyright";
+<Copyright />;
+```
+
+Utilizamos o Copyright no Widget/index.tsx importando o Options
+Dentro do BottomSheet
+
+```tsx
+<BottomSheet
+  ref={bottomSheetRef}
+  snapPoints={[1, 280]}
+  backgroundStyle={styles.modal}
+  handleIndicatorStyle={styles.indicator}
+>
+  <Options />
+</BottomSheet>
+```
+
+> Colocando o conteúdo no Copyright
+
+```tsx
+import React from "react";
+import { View, Text } from "react-native";
+
+import { styles } from "./styles";
+
+export function Copyright() {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>Feito com ♥ pela Rocketseat</Text>
+    </View>
+  );
+}
+```
+
+Colocando o estilo text
+
+```tsx
+import { StyleSheet } from "react-native";
+import { theme } from "../../theme";
+
+export const styles = StyleSheet.create({
+  text: {
+    fontSize: 12,
+    color: theme.colors.text_secondary,
+    fontFamily: theme.fonts.medium,
+  },
+});
+```
+
+No Options/styles.ts
+
+```tsx
+import { StyleSheet } from "react-native";
+
+export const styles = StyleSheet.create({
+  container: {
+    alignItems: "center",
+  },
+});
+```
+
+## Criando um novo componente Option
+
+components/Option/index.tsx styles.ts
+
+Option/index.tsx
+importamos o TouchableOpacity e TouchableOpacityProps
+
+```tsx
+import { View, TouchableOpacity, TouchableOpacityProps } from "react-native";
+```
+
+importamos tambem a Image e ImageProps e Text
+
+```tsx
+import {
+  View,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  Image,
+  ImageProps,
+  Text,
+} from "react-native";
+```
+
+Agora no JSX
+
+```tsx
+//criamos uma interface extendendo TouchableOpacityProps
+interface Props extends TouchableOpacityProps {
+  title: string;
+  image: ImageProps;
+}
+
+//Passamos agora as props
+export function Option({ title, image, ...rest }: Props) {}
+
+//passamos o spreadOperator ...rest pregando qualquer outra propriedade
+<TouchableOpacity style={styles.container} {...rest}></TouchableOpacity>;
+
+//Importamos a imagem e o texto
+<TouchableOpacity style={styles.container} {...rest}>
+  <Image source={image} style={styles.image} />
+  <Text style={styles.title}>Title</Text>
+</TouchableOpacity>;
+```
+
+Estilizando o Option
+
+```tsx
+import { StyleSheet } from "react-native";
+import { theme } from "../../theme";
+
+export const styles = StyleSheet.create({
+  container: {
+    width: 104,
+    height: 112,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 8,
+    borderRadius: 8,
+    marginHorizontal: 8,
+    backgroundColor: theme.colors.surface_secondary,
+  },
+  title: {
+    fontSize: 14,
+    marginTop: 8,
+    fontFamily: theme.fonts.medium,
+    color: theme.colors.text_primary,
+  },
+  image: {
+    width: 40,
+    height: 40,
+  },
+});
+```
+
+Agora dentro de Options renderizamos o nosso Option
+
+Options/index.tsx
+importamos Option e FeedbackTypes
+
+```tsx
+import React from "react";
+import { View } from "react-native";
+import { feedbackTypes } from "../../utils/feedbackTypes";
+import { Copyright } from "../Copyright";
+import { Option } from "../Option";
+
+import { styles } from "./styles";
+
+export function Options() {
+  return (
+    <View style={styles.container}>
+      <View style={styles.options}>
+        {Object.entries(feedbackTypes).map(([key, value]) => (
+          <Option key={key} title={value.title} image={value.image} />
+        ))}
+      </View>
+      <Copyright />
+    </View>
+  );
+}
+```
+
+Colocando o Titulo no BottomSheet
+Options/index.tsx
+
+```tsx
+
+<View style={styles.container}>
+      <Text style={styles.title}></Text>
+
+```
+
+No Options/styles.ts
+incluímos o estilo no title
+
+```tsx
+  title: {
+    fontSize: 20,
+    marginBottom: 32,
+    fontFamily: theme.fonts.medium,
+    color: theme.colors.text_primary,
+  },
+```
