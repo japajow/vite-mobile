@@ -182,5 +182,121 @@ Agora usamos ele
 
 ```
 
-## Criando o Menu 
+## Criando o Menu BottomSheet
 
+instalando o bottom sheet
+
+expo install @gorhom/bottom-sheet@^4
+
+> Precisamos instalar mais 2 biblioteca
+
+reanimated para animação
+gesture-handle seria a parte de gestos
+
+https://docs.expo.dev/versions/latest/sdk/reanimated/
+
+expo install react-native-reanimated
+
+Precisamos colocar o plugin dentro do nosso babel
+
+plugins: ['react-native-reanimated/plugin'],
+
+```tsx
+module.exports = function (api) {
+  api.cache(true);
+  return {
+    presets: ["babel-preset-expo"],
+    plugins: ["react-native-reanimated/plugin"],
+  };
+};
+```
+
+GestureHandle
+
+expo install react-native-gesture-handler
+
+import 'react-native-gesture-handler';
+Colocamos no começo do App.tsx
+
+```tsx
+import "react-native-gesture-handler";
+```
+
+expo start --clear
+
+importamos o BottomSheet
+
+importamos o useRef do react
+Widget/index.tsx
+import React, { useRef } from "react";
+
+```tsx
+import React, { useRef } from "react";
+import BottomSheet from "@gorhom/bottom-sheet";
+
+// Criamos a referencia
+const bottomSheetRef = useRef<BottomSheet>(null); //tipo dele e um BottomSheet
+
+//utilizamos o BottomSheet
+//snapPoints e fechado e aberto,  fechado começa por 1 e aberto fica em  280
+<BottomSheet ref={bottomSheetRef} snapPoints={[1, 280]}></BottomSheet>;
+
+//Criamos uma funcao chamada handleOpen , quando clicar no icone abre o menu (BottomSheet)
+function handleOpen() {
+  //pegamos a referencia e expandimos ele
+  bottomSheetRef.current?.expand();
+}
+
+// passamo o onPress no TouchableOpacity
+ <TouchableOpacity style={styles.button}  onPress={handleOpen}>
+```
+
+Agora importamos o gesture handle para quando arrastar fechar o bottom sheet
+
+import :
+
+```tsx
+import { gestureHandlerRootHOC } from "react-native-gesture-handler";
+
+//tiramos o export do
+//export function Widget()
+
+function Widget();
+
+//exportamos usando o gestureHandlerRootHOC
+export default gestureHandlerRootHOC(Widget); //passando o Widget
+```
+
+> Estilizando o BottomSheet
+
+- backgroundStyle={styles.modal}
+- handleIndicatorStyle={styles.indicator}
+
+```tsx
+<BottomSheet
+  ref={bottomSheetRef}
+  snapPoints={[1, 280]}
+  backgroundStyle={styles.modal}
+  handleIndicatorStyle={styles.indicator}
+></BottomSheet>
+```
+
+Vamos no styles.ts e estilizar
+modal: {
+
+},
+indicator:{
+
+}
+
+```tsx
+  modal: {
+    backgroundColor: theme.colors.surface_primary,
+    paddingBottom: getBottomSpace() + 16,
+  },
+  indicator: {
+    backgroundColor: theme.colors.text_primary,
+    width: 56,
+  },
+
+```

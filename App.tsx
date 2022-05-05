@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { Text, View } from "react-native";
-import { Widget } from "./src/components/Widget";
+import  Widget  from "./src/components/Widget";
 import { theme } from "./src/theme";
 
 //fontes
@@ -30,8 +30,8 @@ export default function App() {
       }}
     >
       <Text>Ola mundo!</Text>
-      <Widget />
       <StatusBar style="light" backgroundColor="transparent" />
+      <Widget />
     </View>
   );
 }
